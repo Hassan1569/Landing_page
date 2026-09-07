@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Field notes from the world's quietest edges."
+    />
+    <title>Northstar / Field Notes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #17231f;
+        --moss: #34483d;
+        --paper: #f1eee5;
+        --sand: #d5c8af;
+        --sun: #e9aa4d;
+        --rust: #dd461c;
+        --line: rgba(23, 35, 31, 0.2);
+        --serif: "DM Serif Display", Georgia, serif;
+        --sans: "Space Grotesk", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--sans);
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.1;
+        z-index: 20;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      img {
+        display: block;
+        width: 100%;
+        object-fit: cover;
+      }
+      .progress {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 30;
+        height: 3px;
+        width: 0;
+        background: var(--sun);
+      }
+      .wrap {
+        width: min(1180px, calc(100% - 56px));
+        margin: auto;
+      }
+      .eyebrow {
+        color: var(--rust);
+        font-size: 0.69rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .display {
+        font-family: var(--serif);
+        font-weight: 400;
+        line-height: 0.94;
+        letter-spacing: -0.04em;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 20px;
+        border: 1px solid currentColor;
+        border-radius: 100px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        transition: 0.3s ease;
+      }
+      .button::after {
+        content: "↗";
+        font-size: 1.1rem;
+        line-height: 0;
+      }
+      .button:hover {
+        background: var(--sun);
+        border-color: var(--sun);
+        transform: translateY(-3px);
+      }
+
+      header {
+        position: fixed;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 25px 0;
+        color: white;
+        mix-blend-mode: difference;
+      }
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .brand {
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .nav-links a {
+        opacity: 0.8;
+        transition: opacity 0.2s;
+      }
+      .nav-links a:hover {
+        opacity: 1;
+      }
+      .menu {
+        display: none;
+        border: 0;
+        color: inherit;
+        background: none;
+        font: inherit;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .hero {
+        position: relative;
+        display: flex;
+        min-height: 100svh;
+        padding: 0;
+        overflow: hidden;
+        color: white;
+        background: #24382f;
+      }
+      .hero-media {
+        position: absolute;
+        inset: -9%;
+        height: 118%;
+        background:
+          linear-gradient(
+            90deg,
+            rgba(8, 19, 15, 0.75) 0%,
+            rgba(8, 19, 15, 0.2) 60%
+          ),
+          url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2200&q=85")
+            center / cover;
+        transform: translateY(var(--parallax, 0px));
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.35),
+          transparent 35%,
+          rgba(0, 0, 0, 0.4)
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: flex-end;
+        width: 100%;
+        padding: 125px 18px 76px;
+      }
+      .hero-copy {
+        width: min(780px, 90%);
+      }
+      .hero h1 {
+        margin: 22px 0 27px;
+        font-size: clamp(4.7rem, 12vw, 10.5rem);
+      }
+      .hero-intro {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 30px;
+        max-width: 670px;
+      }
+      .hero-intro p {
+        max-width: 325px;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.82);
+        line-height: 1.6;
+        font-size: 0.91rem;
+      }
+      .hero .button {
+        color: white;
+      }
+      .hero-stamp {
+        position: absolute;
+        right: 0;
+        bottom: 86px;
+        z-index: 2;
+        width: 116px;
+        height: 116px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 50%;
+        text-align: center;
+        font-size: 0.58rem;
+        letter-spacing: 0.14em;
+        line-height: 1.45;
+        text-transform: uppercase;
+      }
+      .hero-stamp span {
+        font-size: 1.5rem;
+        transform: rotate(45deg);
+      }
+
+      section {
+        padding: 150px 0;
+      }
+      .intro {
+        background: var(--paper);
+      }
+      .intro-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.25fr;
+        gap: 100px;
+        align-items: start;
+      }
+      .intro h2 {
+        max-width: 360px;
+        margin: 18px 0 0;
+        font-size: clamp(3rem, 6vw, 5.8rem);
+      }
+      .intro-copy {
+        padding-top: 40px;
+      }
+      .intro-copy p {
+        max-width: 510px;
+        margin: 0 0 34px;
+        font-family: var(--serif);
+        font-size: clamp(1.6rem, 3vw, 2.5rem);
+        line-height: 1.1;
+      }
+      .intro-copy small {
+        display: block;
+        max-width: 430px;
+        line-height: 1.7;
+        color: #5c645d;
+      }
+
+      .marquee {
+        padding: 18px 0;
+        overflow: hidden;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+        background: var(--sun);
+      }
+      .marquee-track {
+        display: inline-flex;
+        gap: 42px;
+        animation: drift 28s linear infinite;
+        font-family: var(--serif);
+        font-size: 2.2rem;
+        font-style: italic;
+      }
+      .marquee-track span {
+        color: var(--rust);
+        font-family: var(--sans);
+        font-size: 1rem;
+        font-style: normal;
+      }
+      @keyframes drift {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      .dark {
+        color: var(--paper);
+        background: var(--moss);
+      }
+      .dark .eyebrow {
+        color: var(--sun);
+      }
+      .manifesto {
+        position: relative;
+        overflow: hidden;
+      }
+      .manifesto-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.35fr;
+        gap: 80px;
+      }
+      .manifesto h2 {
+        max-width: 420px;
+        margin: 25px 0 0;
+        font-size: clamp(3.5rem, 7vw, 7.2rem);
+      }
+      .manifesto-right {
+        padding-top: 105px;
+      }
+      .manifesto-right p {
+        max-width: 515px;
+        margin: 0 0 45px;
+        font-family: var(--serif);
+        color: #e8e3d6;
+        font-size: clamp(1.8rem, 3vw, 3rem);
+        line-height: 1.05;
+      }
+      .orbit {
+        position: absolute;
+        right: -140px;
+        bottom: -310px;
+        width: 560px;
+        height: 560px;
+        border: 1px solid rgba(233, 170, 77, 0.4);
+        border-radius: 50%;
+      }
+      .orbit::before,
+      .orbit::after {
+        content: "";
+        position: absolute;
+        border: 1px solid rgba(233, 170, 77, 0.22);
+        border-radius: 50%;
+      }
+      .orbit::before {
+        inset: 65px;
+      }
+      .orbit::after {
+        inset: 135px;
+      }
+
+      .places {
+        background: #d8d5c9;
+      }
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 35px;
+        align-items: end;
+        margin-bottom: 65px;
+      }
+      .section-head h2 {
+        margin: 14px 0 0;
+        font-size: clamp(3.4rem, 7vw, 7rem);
+      }
+      .section-head p {
+        width: 245px;
+        margin: 0;
+        color: #5c645d;
+        line-height: 1.6;
+        font-size: 0.82rem;
+      }
+      .place-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr 1fr;
+        gap: 17px;
+        align-items: end;
+      }
+      .place-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 475px;
+        color: white;
+      }
+      .place-card:nth-child(2) {
+        min-height: 370px;
+      }
+      .place-card:nth-child(3) {
+        min-height: 550px;
+      }
+      .place-card img {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .place-card:hover img {
+        transform: scale(1.07);
+      }
+      .place-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(transparent 40%, rgba(9, 20, 14, 0.82));
+      }
+      .place-meta {
+        position: absolute;
+        z-index: 1;
+        inset: auto 24px 24px;
+      }
+      .place-meta h3 {
+        margin: 9px 0 4px;
+        font-family: var(--serif);
+        font-size: 2.35rem;
+        font-weight: 400;
+      }
+      .place-meta p {
+        margin: 0;
+        opacity: 0.7;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .numbers {
+        padding-bottom: 175px;
+        background: var(--paper);
+      }
+      .numbers-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .number {
+        padding: 50px 30px 42px 0;
+        border-right: 1px solid var(--line);
+      }
+      .number + .number {
+        padding-left: 35px;
+      }
+      .number:last-child {
+        border: 0;
+      }
+      .number strong {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--rust);
+        font-family: var(--serif);
+        font-size: clamp(4rem, 7vw, 7rem);
+        font-weight: 400;
+        line-height: 0.8;
+      }
+      .number span {
+        color: #687067;
+        font-size: 0.73rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .journal {
+        color: white;
+        background: #202d29;
+      }
+      .journal .section-head p {
+        color: rgba(241, 238, 229, 0.6);
+      }
+      .journal-grid {
+        display: grid;
+        grid-template-columns: 1.35fr 0.65fr;
+        gap: 17px;
+      }
+      .feature-story {
+        position: relative;
+        min-height: 600px;
+        overflow: hidden;
+      }
+      .feature-story img {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        transition: transform 0.7s;
+      }
+      .feature-story:hover img {
+        transform: scale(1.05);
+      }
+      .feature-story::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(transparent 35%, rgba(9, 16, 14, 0.85));
+      }
+      .story-text {
+        position: absolute;
+        z-index: 1;
+        left: 36px;
+        right: 36px;
+        bottom: 33px;
+      }
+      .story-text h3 {
+        max-width: 600px;
+        margin: 12px 0 0;
+        font-family: var(--serif);
+        font-size: clamp(2.3rem, 5vw, 4.7rem);
+        font-weight: 400;
+        line-height: 0.95;
+      }
+      .side-stories {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        gap: 17px;
+      }
+      .side-story {
+        padding: 28px;
+        background: #47594c;
+      }
+      .side-story:last-child {
+        background: var(--rust);
+      }
+      .side-story h3 {
+        margin: 35px 0 25px;
+        font-family: var(--serif);
+        font-size: 2rem;
+        font-weight: 400;
+        line-height: 1;
+      }
+      .side-story a {
+        font-size: 0.69rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .closing {
+        position: relative;
+        min-height: 820px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        color: white;
+        text-align: center;
+        background: #4b3626;
+      }
+      .closing-bg {
+        position: absolute;
+        inset: -10%;
+        background:
+          linear-gradient(rgba(30, 23, 15, 0.35), rgba(30, 23, 15, 0.7)),
+          url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2200&q=85")
+            center / cover;
+        transform: translateY(var(--parallax, 0px));
+      }
+      .closing-content {
+        position: relative;
+        z-index: 1;
+        padding: 70px 0;
+      }
+      .closing h2 {
+        max-width: 850px;
+        margin: 22px auto 32px;
+        font-size: clamp(4.6rem, 10vw, 10rem);
+      }
+      footer {
+        padding: 30px 0;
+        color: var(--paper);
+        background: var(--ink);
+      }
+      .footer-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        align-items: center;
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .footer-row p {
+        margin: 0;
+        opacity: 0.55;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @media (max-width: 760px) {
+        .wrap {
+          width: min(100% - 38px, 600px);
+        }
+        header {
+          padding: 19px 0;
+        }
+        .nav-links {
+          display: none;
+        }
+        .menu {
+          display: block;
+        }
+        .hero-content {
+          padding: 112px 18px 54px;
+        }
+        .hero h1 {
+          font-size: clamp(4.5rem, 21vw, 7rem);
+        }
+        .hero-intro {
+          display: block;
+        }
+        .hero-intro p {
+          margin-bottom: 25px;
+        }
+        .hero-stamp {
+          display: none;
+        }
+        section {
+          padding: 92px 0;
+        }
+        .intro-grid,
+        .manifesto-grid,
+        .journal-grid {
+          grid-template-columns: 1fr;
+          gap: 45px;
+        }
+        .intro-copy,
+        .manifesto-right {
+          padding-top: 0;
+        }
+        .manifesto h2 {
+          font-size: 4rem;
+        }
+        .orbit {
+          right: -290px;
+        }
+        .section-head {
+          display: block;
+          margin-bottom: 40px;
+        }
+        .section-head p {
+          margin-top: 28px;
+        }
+        .place-grid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        .place-card,
+        .place-card:nth-child(2),
+        .place-card:nth-child(3) {
+          min-height: 430px;
+        }
+        .numbers {
+          padding-bottom: 95px;
+        }
+        .numbers-grid {
+          grid-template-columns: 1fr;
+        }
+        .number,
+        .number + .number {
+          padding: 30px 0;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+        .feature-story {
+          min-height: 470px;
+        }
+        .side-stories {
+          min-height: 430px;
+        }
+        .closing {
+          min-height: 620px;
+        }
+        .footer-row {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+        .hero-media,
+        .closing-bg {
+          transform: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress" aria-hidden="true"></div>
+    <header>
+      <div class="wrap nav">
+        <a class="brand" href="#top">NORTHSTAR / 06</a>
+        <nav class="nav-links">
+          <a href="#story">The story</a><a href="#places">Field trips</a
+          ><a href="#journal">Journal</a><a href="#contact">Write us</a>
+        </nav>
+        <button class="menu" type="button">Menu</button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-media" data-speed=".18"></div>
+        <div class="wrap hero-content">
+          <div class="hero-copy reveal">
+            <div class="eyebrow">Independent travel journal / Est. 2014</div>
+            <h1 class="display">Go where<br /><em>quiet</em> lives.</h1>
+            <div class="hero-intro">
+              <p>
+                Stories, stays, and small departures for people who would rather
+                take the long way around.
+              </p>
+              <a class="button" href="#story">Begin the journey</a>
+            </div>
+          </div>
+        </div>
+        <div class="hero-stamp">
+          <span>✦</span><br />Issue 06<br />Beyond the map
+        </div>
+      </section>
+
+      <section class="intro" id="story">
+        <div class="wrap intro-grid reveal">
+          <div>
+            <div class="eyebrow">01 / A slower compass</div>
+            <h2 class="display">Make room for the unexpected.</h2>
+          </div>
+          <div class="intro-copy">
+            <p>There is more to see when you stop trying to see it all.</p>
+            <small
+              >Northstar is a collection of field notes from the edges of the
+              itinerary. We seek out places with weathered doors, long tables,
+              and a little distance from the noise. Come along for the view,
+              stay for the feeling.</small
+            >
+          </div>
+        </div>
+      </section>
+
+      <div class="marquee" aria-label="Explore slowly">
+        <div class="marquee-track">
+          Travel deeply <span>✦</span> Sleep outside <span>✦</span> Follow the
+          weather <span>✦</span> Travel deeply <span>✦</span> Sleep outside
+          <span>✦</span> Follow the weather <span>✦</span>
+        </div>
+      </div>
+
+      <section class="dark manifesto">
+        <div class="wrap manifesto-grid reveal">
+          <div>
+            <div class="eyebrow">02 / The north star</div>
+            <h2 class="display">Find your own true north.</h2>
+          </div>
+          <div class="manifesto-right">
+            <p>
+              “The best trips do not take you away from yourself. They return
+              you to the part you forgot was there.”
+            </p>
+            <a class="button" href="#places">See the field notes</a>
+          </div>
+        </div>
+        <div class="orbit"></div>
+      </section>
+
+      <section class="places" id="places">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <div>
+              <div class="eyebrow">03 / Places worth the detour</div>
+              <h2 class="display">Out there, somewhere.</h2>
+            </div>
+            <p>Three recent dispatches for your next beautiful wrong turn.</p>
+          </div>
+          <div class="place-grid reveal">
+            <article class="place-card">
+              <img
+                src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1000&q=85"
+                alt="Warm light across a mountain valley"
+              />
+              <div class="place-meta">
+                <div class="eyebrow">Norway / 62°N</div>
+                <h3>Under open skies</h3>
+                <p>Four days above the tree line</p>
+              </div>
+            </article>
+            <article class="place-card">
+              <img
+                src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=900&q=85"
+                alt="Tall trees in a misty forest"
+              />
+              <div class="place-meta">
+                <div class="eyebrow">Slovenia / 46°N</div>
+                <h3>Forest bathing</h3>
+                <p>A cabin, no signal, one good book</p>
+              </div>
+            </article>
+            <article class="place-card">
+              <img
+                src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=1000&q=85"
+                alt="Blue ocean meeting a rocky shore"
+              />
+              <div class="place-meta">
+                <div class="eyebrow">Portugal / 39°N</div>
+                <h3>Atlantic hours</h3>
+                <p>Salt on your skin, nowhere to be</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="numbers">
+        <div class="wrap">
+          <div class="numbers-grid reveal">
+            <div class="number">
+              <strong>47</strong><span>field notes published</span>
+            </div>
+            <div class="number">
+              <strong>18</strong><span>slow places visited</span>
+            </div>
+            <div class="number">
+              <strong>6</strong><span>reasons to rush</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="journal" id="journal">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <div>
+              <div class="eyebrow">04 / Latest from the journal</div>
+              <h2 class="display">Read the long way.</h2>
+            </div>
+            <p>Notes on making a life with more outside in it.</p>
+          </div>
+          <div class="journal-grid reveal">
+            <article class="feature-story">
+              <img
+                src="https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=1400&q=85"
+                alt="Person standing on a beach at sunset"
+              />
+              <div class="story-text">
+                <div class="eyebrow">
+                  A field guide to stillness / 08 min read
+                </div>
+                <h3>The art of doing almost nothing.</h3>
+              </div>
+            </article>
+            <div class="side-stories">
+              <article class="side-story">
+                <div class="eyebrow">Letters / 04 min read</div>
+                <h3>Notes from a rainy train window.</h3>
+                <a href="#contact">Read dispatch ↗</a>
+              </article>
+              <article class="side-story">
+                <div class="eyebrow">Gear / 06 min read</div>
+                <h3>Pack less. Notice more.</h3>
+                <a href="#contact">Read dispatch ↗</a>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing" id="contact">
+        <div class="closing-bg" data-speed=".1"></div>
+        <div class="wrap closing-content reveal">
+          <div class="eyebrow">05 / Until next time</div>
+          <h2 class="display">Leave a little room for wonder.</h2>
+          <a class="button" href="mailto:hello@northstar.example"
+            >Join the field notes</a
+          >
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div class="wrap footer-row">
+        <a class="brand" href="#top">NORTHSTAR / 06</a>
+        <p>Made for the quietly curious. © 2024 Northstar Journal.</p>
+        <a href="#top">Back to top ↑</a>
+      </div>
+    </footer>
+    <script>
+      const progress = document.querySelector(".progress");
+      const layers = document.querySelectorAll("[data-speed]");
+      const reveals = document.querySelectorAll(".reveal");
+      const updateScroll = () => {
+        const height =
+          document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.width = `${(window.scrollY / height) * 100}%`;
+        layers.forEach((layer) => {
+          layer.style.setProperty(
+            "--parallax",
+            `${window.scrollY * Number(layer.dataset.speed)}px`,
+          );
+        });
+      };
+      window.addEventListener("scroll", updateScroll, { passive: true });
+      updateScroll();
+      const observer = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          }),
+        { threshold: 0.13 },
+      );
+      reveals.forEach((item) => observer.observe(item));
+      document.querySelector(".menu").addEventListener("click", () => {
+        const links = document.querySelector(".nav-links");
+        const open = links.style.display === "flex";
+        links.style.display = open ? "" : "flex";
+        if (!open) {
+          links.style.position = "absolute";
+          links.style.top = "60px";
+          links.style.right = "19px";
+          links.style.flexDirection = "column";
+          links.style.alignItems = "flex-end";
+          links.style.padding = "18px";
+          links.style.background = "rgba(23,35,31,.94)";
+        }
+      });
+    </script>
+  </body>
+</html>
